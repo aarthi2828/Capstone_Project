@@ -9,7 +9,7 @@ from keras.layers import Conv1D, MaxPooling1D
 from keras.layers import BatchNormalization
 from keras import initializers, regularizers, constraints, optimizers, layers
 import streamlit as st
-
+import pandas as pd
 loaded_model_1 = keras.models.load_model(filepath='C:/Users/aarth/Downloads/jigsaw-toxic-comment-classification-challenge/toxicity1.h5')
 
 
@@ -18,11 +18,16 @@ maxpadlen = 200
 val_split = 0.2      
 embedding_dim_fasttext = 300
 
-
-
+pr=pd.read_csv(r"C:\Users\aarth\Downloads\jigsaw-toxic-comment-classification-challenge\train_pro.csv")
+processed_train_data=pr.train
+p=[]
+for i in processed_train_data:
+    p.append(str(i))
+from keras.preprocessing.text import Tokenizer
+tokenizer = Tokenizer(num_words=max_features)
+tokenizer.fit_on_texts(list(p))
 
 def toxicity_level(string):
-    tokenizer= Tokenizer()
     new_string = [string]
     new_string = tokenizer.texts_to_sequences(new_string)
     new_string = pad_sequences(new_string, maxlen=maxpadlen, padding='post')
